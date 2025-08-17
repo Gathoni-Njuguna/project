@@ -1,0 +1,16 @@
+
+{% extends "books/base.html" %}
+
+{% block content %}
+    <h1>Home</h1>
+    <p>Welcome to the Book App!</p>
+    <p><a href="{% url 'books:book_list' %}">See all books</a></p>
+{% endblock %}
+
+{% extends "booksrecomm/base.html" %}
+
+{% block content %}
+    <h1>Home</h1>
+    <p>Welcome to the Book App!</p>
+    <p><a href="{% url 'books:book_list' %}">See all books</a></p>
+{% endblock %}
