@@ -23,16 +23,16 @@ class Book(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.title} by {self.author}"
+    # def __str__(self):
+    #     return f"{self.title} by {self.author}"
     
-    def get_absolute_url(self):
-        return reverse('book_detail', kwargs={'pk': self.pk})
+    # def get_absolute_url(self):
+    #     return reverse('book_detail', kwargs={'pk': self.pk})
     
-    def progress_percentage(self):
-        if self.total_pages > 0:
-            return round((self.current_page / self.total_pages) * 100)
-        return 0
+    # def progress_percentage(self):
+    #     if self.total_pages > 0:
+    #         return round((self.current_page / self.total_pages) * 100)
+    #     return 0
     
     class Meta:
         ordering = ['-date_added']
