@@ -4,7 +4,8 @@ from django.urls import reverse_lazy
 from .models import Book, Review
 from .forms import BookForm, ReviewForm, UserCreationForm, SignUpForm
 from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 class BookListView(ListView):
     model = Book
@@ -19,16 +20,35 @@ class BookListView(ListView):
         else:
             # show all books to anonymous users
             return Book.objects.all()
-class BookDetailView(LoginRequiredMixin, DetailView):
+class BookDetailView(DetailView):
     model = Book
-    template_name = "book_detail.html"
+    template_name = "books/book_detail.html"
     context_object_name = "book"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['reviews'] = Review.objects.filter(book=self.object)
+        return context
 
     def get_object(self, queryset=None):
         book = super().get_object(queryset)
-        if book.user != self.request.user:
-            raise Http404("You do not have permission to view this book.")
+        # Optional: allow all to view but restrict editing elsewhere
         return book
+# class BookDetailView(DetailView):
+#     model = Book
+#     template_name = "books/book_detail.html"
+#     context_object_name = "book"
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['reviews'] = Review.objects.filter(book=self.object)
+#         return context
+
+#     def get_object(self, queryset=None):
+#         book = super().get_object(queryset)
+#         # Optional: allow all to view but restrict editing elsewhere
+#         return book
+
 class BookCreateView(LoginRequiredMixin, CreateView):
     model = Book
     form_class = BookForm
@@ -81,3 +101,59 @@ def login_view(request):
     else:
         form = UserCreationForm()
     return render(request, "books/login.html", {"form": form})
+# Anyone can view reviews
+def review_list(request):
+    reviews = Review.objects.all()
+    return render(request, "books/review_list.html", {"reviews": reviews})
+
+def review_detail(request, pk):
+    review = get_object_or_404(Review, pk=pk)
+    return render(request, "books/review_detail.html", {"review": review})
+
+# Only logged-in users can create/edit/delete
+@login_required
+def review_create(request):
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.save()
+            return redirect("review_list")
+    else:
+        form = ReviewForm()
+    return render(request, "books/review_form.html", {"form": form})
+
+@login_required
+def review_edit(request, pk):
+    review = get_object_or_404(Review, pk=pk, user=request.user)
+    if request.method == "POST":
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect("review_detail", pk=pk)
+    else:
+        form = ReviewForm(instance=review)
+    return render(request, "books/review_form.html", {"form": form})
+
+@login_required
+def review_delete(request, pk):
+    review = get_object_or_404(Review, pk=pk, user=request.user)
+    if request.method == "POST":
+        review.delete()
+        return redirect("review_list")
+    return render(request, "books/review_confirm_delete.html", {"review": review})
+def add_review(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.book = book
+            review.user = request.user
+            review.save()
+            messages.success(request, "Review added successfully!")
+            return redirect("book_detail", pk=pk)
+    else:
+        form = ReviewForm()
+    return render(request, "books/add_review.html", {"form": form, "book": book})

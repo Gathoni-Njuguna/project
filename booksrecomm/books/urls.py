@@ -14,4 +14,13 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="books/login.html"), name="login"),
      path('logout/', auth_views.LogoutView.as_view(next_page='book_list'), name='logout'),
     path("register/", views.register, name="register"),
+
+    path("reviews/", views.review_list, name="review_list"),
+    path("reviews/<int:pk>/", views.review_detail, name="review_detail"),
+    path("reviews/add/", views.review_create, name="review_create"),
+    path("reviews/<int:pk>/edit/", views.review_edit, name="review_edit"),
+    path('books/<int:pk>/add_review/', views.add_review, name='add_review'),
+    path("reviews/<int:pk>/delete/", views.review_delete, name="review_delete"),
+
+
 ]
