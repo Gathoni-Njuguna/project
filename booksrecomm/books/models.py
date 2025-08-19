@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Book(models.Model):
     STATUS_CHOICES = (
@@ -9,7 +10,7 @@ class Book(models.Model):
         ('want_to_read', 'Want to Read'),
     )
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     isbn = models.CharField(max_length=13, db_index=True)
@@ -36,14 +37,11 @@ class Book(models.Model):
     
     class Meta:
         ordering = ['-date_added']
-        unique_together = ['user_id', 'isbn'] 
+        unique_together = ['user', 'isbn'] 
         verbose_name = 'Book'
 class UserProfile(models.Model):
-    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(blank=True, null=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
     def __str__(self):
@@ -52,17 +50,27 @@ class UserProfile(models.Model):
     def get_absolute_url(self):
         return reverse('profile_detail', kwargs={'username': self.user.username})
     
-class Reviews(models.Model):
-    id = models.AutoField(primary_key=True)
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.PositiveIntegerField(default=0)
-    comment = models.TextField(blank=True, null=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+class Review(models.Model):
+    RATING_CHOICES = [
+        (1, '★'),
+        (2, '★★'),
+        (3, '★★★'),
+        (4, '★★★★'),
+        (5, '★★★★★'),
+    ]
+    book= models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveIntegerField(
+        choices=RATING_CHOICES,
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    review = models.TextField(blank=True, null=True)
+    created_at= models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Review by {self.user.username} for {self.book.title}"
-
+    def stars(self):
+        return '★' * self.rating + '☆' * (5 - self.rating)
     class Meta:
-        unique_together = ['book_id', 'user_id']
-        ordering = ['-date_created']
+        unique_together = ['book', 'user']
+        ordering = ['-created_at']
