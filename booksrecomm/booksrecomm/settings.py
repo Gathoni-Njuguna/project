@@ -1,5 +1,6 @@
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,7 +46,7 @@ ROOT_URLCONF = 'booksrecomm.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],  
+        'DIRS': [os.path.join(BASE_DIR, 'books/templates')],  # Add your templates directory here
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,6 +110,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # optional, only if you have a project-level static/
 ]
+# settings.py
+LOGIN_REDIRECT_URL = 'book_list'   # Redirect after login
+LOGOUT_REDIRECT_URL = 'book_list'  # Redirect after logout
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

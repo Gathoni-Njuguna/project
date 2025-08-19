@@ -2,9 +2,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Book, Review
-from .forms import BookForm, ReviewForm
+from .forms import BookForm, ReviewForm, UserCreationForm, SignUpForm
 from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.contrib import messages
 class BookListView(ListView):
     model = Book
     template_name = "book_list.html"
@@ -60,3 +61,23 @@ class BookDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 # Add to URL patterns
 def home_redirect(request):
     return redirect('book_list')
+def register(request):
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Registration successful! You can now log in.")
+            return redirect("book_list")
+    else:
+        form = SignUpForm()
+    return render(request, "books/register.html", {"form": form})
+def login_view(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Login successful!")
+            return redirect("book_list")
+    else:
+        form = UserCreationForm()
+    return render(request, "books/login.html", {"form": form})
