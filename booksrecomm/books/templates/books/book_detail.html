@@ -11,29 +11,41 @@
     <hr>
 
     <h3>Reviews</h3>
-    {% if book.reviews.exists %}
-        {% for review in book.reviews.all %}
-            <div class="card mb-2">
-                <div class="card-body">
-                    <p>
-                        <strong>
-                            {% if review.user %}
-                                {{ review.user.username }}
-                            {% else %}
-                                Anonymous
-                            {% endif %}
-                        </strong> says:
-                    </p>
-                    <p>{{ review.review}}</p>
-                  <p><strong>Rating:</strong> <span class="text-warning">{{ review.stars }}</span></p>
+  {% for review in reviews_page %}
+    <div class="review mb-3">
+        <strong>{{ review.user.username }}</strong> says:
+        <p>{{ review.review }}</p>
+       <p><strong>Rating:</strong> <span class="text-warning">{{ review.stars }}</span></p>
 
-                    <small class="text-muted">Posted on {{ review.created_at|date:"M d, Y H:i" }}</small>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No reviews yet. Be the first to review this book!</p>
-    {% endif %}
+    </div>
+{% empty %}
+    <p>No reviews yet.</p>
+{% endfor %}
+
+<!-- Pagination controls -->
+<nav aria-label="Review pagination">
+    <ul class="pagination">
+        {% if reviews_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ reviews_page.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">Page {{ reviews_page.number }} of {{ reviews_page.paginator.num_pages }}</span>
+        </li>
+
+        {% if reviews_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ reviews_page.next_page_number }}">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+    </ul>
+</nav>
 
     {% if user.is_authenticated %}
         <hr>

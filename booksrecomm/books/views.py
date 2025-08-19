@@ -4,9 +4,11 @@ from django.urls import reverse_lazy
 from .models import Book, Review
 from .forms import BookForm, ReviewForm, UserCreationForm, SignUpForm
 from django.http import Http404
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
 class BookListView(ListView):
     model = Book
     template_name = "book_list.html"
@@ -27,7 +29,14 @@ class BookDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['reviews'] = Review.objects.filter(book=self.object)
+        book = self.get_object()
+        reviews_list = book.reviews.all()  # get all reviews for this book
+        paginator = Paginator(reviews_list, 5)  # 5 reviews per page
+
+        page_number = self.request.GET.get('page')
+        reviews_page = paginator.get_page(page_number)
+
+        context['reviews_page'] = reviews_page
         return context
 
     def get_object(self, queryset=None):
