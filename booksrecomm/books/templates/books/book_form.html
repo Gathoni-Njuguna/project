@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>
+        {% if object %}Update {{ object.title }}{% else %}Add New Book{% endif %}
+    </h2>
+    
+    {% if not request.user.is_authenticated %}
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle"></i> 
+        You must be <a href="{% url 'login' %}?next={{ request.path }}">logged in</a> 
+        to add or edit books.
+    </div>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">
+                {% if object %}Update Book{% else %}Add Book{% endif %}
+            </button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

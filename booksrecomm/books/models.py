@@ -9,12 +9,11 @@ class Book(models.Model):
         ('completed', 'Completed'),
         ('want_to_read', 'Want to Read'),
     )
-    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    isbn = models.CharField(max_length=13, db_index=True)
-    total_pages = models.PositiveIntegerField()
+    isbn = models.CharField(max_length=13, db_index=True, blank=True)
+    total_pages = models.PositiveIntegerField(null=True, blank=True)
     current_page = models.PositiveIntegerField(default=0)
     status = models.CharField(
         max_length=20, 

@@ -1,0 +1,56 @@
+{% extends "books/base.html" %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">{{ book.title }}</h1>
+            <h2 class="card-subtitle mb-3 text-muted">by {{ book.author }}</h2>
+            
+            <div class="mb-4">
+                <span class="badge bg-{{ book.status_class }}">{{ book.get_status_display }}</span>
+                <span class="ms-2">Added by {{ book.user.username }}</span>
+            </div>
+            
+            <div class="progress mb-3" style="height: 25px;">
+                <div class="progress-bar" style="width: {{ book.progress_percentage }}%">
+                    {{ book.progress_percentage }}%
+                </div>
+            </div>
+            
+            <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+            <p><strong>Pages:</strong> {{ book.current_page }} / {{ book.total_pages }}</p>
+            
+            {% if request.user == book.user %}
+            <div class="mt-4">
+                <a href="{% url 'book_update' book.pk %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'book_delete' book.pk %}" class="btn btn-outline-danger">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <h3>Reviews</h3>
+        
+        {% if reviews %}
+            {% for review in reviews %}
+                {% include "books/partials/review_item.html" %}
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">No reviews yet</div>
+        {% endif %}
+        
+        {% if user.is_authenticated %}
+        <div class="mt-4">
+            <h4>Add Your Review</h4>
+            <form method="post" action="{% url 'review_create' book.pk %}">
+                {% csrf_token %}
+                {{ review_form.as_p }}
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

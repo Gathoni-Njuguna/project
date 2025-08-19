@@ -1,14 +1,14 @@
 {% extends "books/base.html" %}
 
 {% block content %}
-    <h1>Book List</h1>
-    <ul>
-        {% for book in books %}
-            <li>
-                <strong>{{ book.title }}</strong> by {{ book.author }}
-            </li>
-        {% empty %}
-            <li>No books available.</li>
-        {% endfor %}
-    </ul>
+ {% for book in books %}
+  <h3>{{ book.title }}</h3>
+  <p>{{ book.author }}</p>
+
+  {% if user.is_authenticated and book.user == user %}
+    <a href="{% url 'book-edit' book.pk %}">Edit</a>
+    <a href="{% url 'book-delete' book.pk %}">Delete</a>
+  {% endif %}
+{% endfor %}
+
 {% endblock %}
