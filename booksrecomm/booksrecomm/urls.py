@@ -6,6 +6,5 @@ from books import views as book_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('books.urls')),  
-    path("", book_views.home, name="home"),# Your books app URLs
     
 ]
