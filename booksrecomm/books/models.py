@@ -36,7 +36,7 @@ class Book(models.Model):
     
     class Meta:
         ordering = ['-date_added']
-        unique_together = ['user', 'isbn'] 
+        unique_together = ['user', 'title', 'author'] 
         verbose_name = 'Book'
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

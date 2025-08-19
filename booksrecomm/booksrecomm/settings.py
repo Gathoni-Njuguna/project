@@ -113,6 +113,8 @@ STATICFILES_DIRS = [
 # settings.py
 LOGIN_REDIRECT_URL = 'book_list'   # Redirect after login
 LOGOUT_REDIRECT_URL = 'book_list'  # Redirect after logout
+LOGIN_URL = "/login/"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
