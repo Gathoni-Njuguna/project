@@ -8,7 +8,7 @@
        
   {% if user.is_authenticated %}
     <p><a href="{% url 'book-add' %}" class="btn btn-primary">Add New Book</a></p>
-    <p><a href="{% url 'all_list' %}" class="btn btn-primary">Books In Library</a></p>
+    <p><a href="{% url 'book_list' %}" class="btn btn-primary">My Books</a></p>
 {% endif %}
     </div>
 

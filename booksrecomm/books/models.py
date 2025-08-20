@@ -61,6 +61,8 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     rating = models.PositiveIntegerField(
         choices=RATING_CHOICES,
+        blank=True,
+        null=True,
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
     review = models.TextField(blank=True, null=True)
@@ -71,7 +73,8 @@ class Review(models.Model):
     def __str__(self):
         return f"Review by {self.user.username} for {self.book.title}"
     def stars(self):
-        return '★' * self.rating + '☆' * (5 - self.rating)
+        if self.rating >=1 and self.rating <= 5:
+            return '★' * self.rating + '☆' * (5 - self.rating)
     class Meta:
         unique_together = ['book', 'user']
         ordering = ['-created_at']
