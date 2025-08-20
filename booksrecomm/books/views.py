@@ -18,10 +18,19 @@ class BookListView(ListView):
     def get_queryset(self):
         if self.request.user.is_authenticated:
             # show only books for the logged-in user
+            
             return Book.objects.filter(user=self.request.user)
         else:
             # show all books to anonymous users
             return Book.objects.all()
+class AllBookListView(ListView):
+    model = Book
+    template_name = "books/book_list.html"
+    context_object_name = "books"
+    paginate_by = 10  # Number of books per page
+
+    def get_queryset(self):
+        return Book.objects.all()  # Show all books regardless of user
 class BookDetailView(DetailView):
     model = Book
     template_name = "books/book_detail.html"

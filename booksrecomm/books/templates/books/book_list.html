@@ -60,8 +60,7 @@
           {% else %}
         {% if user.is_authenticated %}
     <div class="alert alert-info mt-4">
-        <a href="{% url 'book_list' %}" class="alert-link">Books in The Library</a>
-            <a href="{% url 'book-add' %}" class="alert-link">Add the first book</a>
+        <a href="{% url 'all_list' %}" class="alert-link">Books in The Library</a><br>
         {% else %}
             <a href="{% url 'login' %}" class="alert-link">Log in</a> to add books.
         {% endif %}
