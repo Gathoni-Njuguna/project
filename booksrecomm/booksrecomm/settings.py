@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-lkvhgz9aay%^9w*dw(^dgqqp+)kc0al78#6vpyh8kf6qs&a_t6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -36,6 +36,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -108,11 +109,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # optional, only if you have a project-level static/
+     os.path.join(BASE_DIR, 'static'),  # optional, only if you have a project-level static/
 ]
 # settings.py
-LOGIN_REDIRECT_URL = 'book_list'   # Redirect after login
-LOGOUT_REDIRECT_URL = 'book_list'  # Redirect after logout
+LOGIN_REDIRECT_URL = 'all_list'   # Redirect after login
+LOGOUT_REDIRECT_URL = 'all_list'  # Redirect after logout
 LOGIN_URL = "/login/"
 
 
