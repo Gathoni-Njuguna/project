@@ -4,9 +4,10 @@ from .views import BookListView, BookDetailView, BookCreateView, BookUpdateView,
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView  
 # from .views import ReviewCreateView, ReviewUpdateView  
+from django.views.generic import RedirectView
 
 urlpatterns = [
-
+    path('', RedirectView.as_view(pattern_name='book_list'), name='all_list'),  # Redirect to book list
     path("books/", BookListView.as_view(), name="book_list"),
     path("all_books/", AllBookListView.as_view(), name="all_list"),
     path("books/<int:pk>/", BookDetailView.as_view(), name="book_detail"),
