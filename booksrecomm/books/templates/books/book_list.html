@@ -21,7 +21,7 @@
                     <h3 class="card-title">
                         <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a>
                     </h3>
-                    <p class="card-text">by {{ book.author }}</p>
+                    <p class="card-text">by {{ book.author }}</p> 
                     
                     <div class="mt-3">
                         <span class="badge bg-{{ book.status_class }}">
@@ -29,8 +29,10 @@
                         </span>
 
                     </div>
+                    
             
                 </div>
+                
                 
                 <div class="card-footer bg-white">
                     <div class="d-flex justify-content-between">
@@ -40,6 +42,7 @@
                         </a>
                         
                         {% if user.is_authenticated and book.user == user %}
+                        <div class="text-success">Reading status: {{book.status}}</div>
                         <div>
                             <a href="{% url 'book-edit' book.pk %}" 
                                class="btn btn-sm btn-outline-secondary">
