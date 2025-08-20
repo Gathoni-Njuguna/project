@@ -11,16 +11,25 @@
     <hr>
 
     <h3>Reviews</h3>
-  {% for review in reviews_page %}
-    <div class="review mb-3">
-        <strong>{{ review.user.username }}</strong> says:
-        <p>{{ review.review }}</p>
-       <p><strong>Rating:</strong> <span class="text-warning">{{ review.stars }}</span></p>
+    {% for review in reviews_page %}
+        <div class="review mb-3 border rounded p-3">
+            <p><strong>{{ review.user.username }}</strong> says:</p>
+            <p>{{ review.review }}</p>
+            <p>
+                <strong>Rating:</strong> 
+                <span class="text-warning">{{ review.stars }}</span>
+            </p>
 
-    </div>
-{% empty %}
-    <p>No reviews yet.</p>
-{% endfor %}
+            {% if user.is_authenticated and review.user == user %}
+                <!-- Only the owner can edit -->
+                <a href="{% url 'review_edit' review.pk %}" class="btn btn-sm btn-outline-secondary">
+                    Edit Review
+                </a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No reviews yet.</p>
+    {% endfor %}
 
 <!-- Pagination controls -->
 <nav aria-label="Review pagination">
@@ -53,7 +62,7 @@
         <form method="post" action="{% url 'add_review' book.pk %}">
             {% csrf_token %}
             {{ review_form.as_p }}
-            <button type="submit" class="btn btn-primary">Submit Review</button>
+            <button type="submit" class="btn btn-primary">Add Review</button>
         </form>
     {% else %}
         <p>

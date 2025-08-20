@@ -1,0 +1,13 @@
+{% extends "books/base.html" %}
+
+{% block content %}
+    <h2>Review Details</h2>
+    <p><strong>Book:</strong> {{ review.book.title }}</p>
+    <p><strong>Reviewer:</strong> {{ review.user.username }}</p>
+    <p><strong>Rating:</strong> {{ review.rating }}</p>
+    <p><strong>Review:</strong> {{ review.review }}</p>
+    <p><strong>Date:</strong> {{ review.created_at }}</p>
+
+    <a href="{% url 'review_edit' review.id %}">Edit Review</a>
+    <a href="{% url 'review_list' %}">Back to Reviews</a>
+{% endblock %}

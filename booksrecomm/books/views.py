@@ -61,7 +61,7 @@ class BookDetailView(DetailView):
 class BookCreateView(LoginRequiredMixin, CreateView):
     model = Book
     form_class = BookForm
-    template_name = "book_form.html"
+    template_name = "books/book_form.html"
     success_url = reverse_lazy('book_list')
 
     def form_valid(self, form):
@@ -70,7 +70,7 @@ class BookCreateView(LoginRequiredMixin, CreateView):
 class BookUpdateView(LoginRequiredMixin, UpdateView):
     model = Book
     form_class = BookForm
-    template_name = "book_form.html"
+    template_name = "books/book_form.html"
     success_url = reverse_lazy('book_list')
 
     def get_object(self, queryset=None):
@@ -165,4 +165,4 @@ def add_review(request, pk):
             return redirect("book_detail", pk=pk)
     else:
         form = ReviewForm()
-    return render(request, "books/add_review.html", {"form": form, "book": book})
+    return render(request, "books/review_form.html", {"form": form, "book": book})
