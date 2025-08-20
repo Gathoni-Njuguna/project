@@ -19,6 +19,11 @@
                 <strong>Rating:</strong> 
                 <span class="text-warning">{{ review.stars }}</span>
             </p>
+                 <p>
+                <small>Date:
+                <span class="primary">{{ review.created_at }}</span>
+            </p></small>
+    
 
             {% if user.is_authenticated and review.user == user %}
                 <!-- Only the owner can edit -->

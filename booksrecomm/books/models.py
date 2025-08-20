@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -42,7 +42,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
-
+    email = models.EmailField(unique=True)
     def __str__(self):
         return self.user.username
 
@@ -65,7 +65,9 @@ class Review(models.Model):
     )
     review = models.TextField(blank=True, null=True)
     created_at= models.DateTimeField(auto_now_add=True)
-
+    updated_at = models.DateTimeField(auto_now=True) 
+    def is_edited(self):
+        return self.updated_at and self.updated_at > self.created_at
     def __str__(self):
         return f"Review by {self.user.username} for {self.book.title}"
     def stars(self):

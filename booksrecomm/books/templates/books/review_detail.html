@@ -7,7 +7,9 @@
     <p><strong>Rating:</strong> {{ review.rating }}</p>
     <p><strong>Review:</strong> {{ review.review }}</p>
     <p><strong>Date:</strong> {{ review.created_at }}</p>
-
+    {% if review.is_edited %}
+        <p><strong>Last Edited:</strong> {{ review.updated_at }}</p>
+    {% endif %}
     <a href="{% url 'review_edit' review.id %}">Edit Review</a>
     <a href="{% url 'review_list' %}">Back to Reviews</a>
 {% endblock %}
