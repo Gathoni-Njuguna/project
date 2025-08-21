@@ -7,7 +7,11 @@
     <h2>{{ book.title }}</h2>
     <p><strong>Author:</strong> {{ book.author }}</p>
     <p><strong>Description:</strong> {{ book.description }}</p>
-
+         {% if book.tags.all %}
+                        {% for tag in book.tags.all %}
+                        <span class="badge bg-primary">{{ tag.name }}</span>
+                        {% endfor %}
+            {% endif %}
     <hr>
 
     <h3>Reviews</h3>

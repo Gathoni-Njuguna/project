@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'isbn', 'total_pages', 'status']
+        fields = ['title', 'author', 'isbn', 'total_pages', 'status','description', 'tags']
         widgets = {
             'status': forms.Select(attrs={'class': 'form-select'}),
         }

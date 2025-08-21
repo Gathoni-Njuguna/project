@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from taggit.managers import TaggableManager
 class Book(models.Model):
     STATUS_CHOICES = (
         ('reading', 'Currently Reading'),
@@ -12,6 +12,8 @@ class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books')
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    tags = TaggableManager(blank=True)  # Using taggit for tagging books
     isbn = models.CharField(max_length=13, db_index=True, blank=True)
     total_pages = models.PositiveIntegerField(null=True, blank=True)
     current_page = models.PositiveIntegerField(default=0)
