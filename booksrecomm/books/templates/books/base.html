@@ -26,6 +26,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'all_list' %}">Books</a>
                     </li>
+                    <li>
+                        
 
                     {% if user.is_authenticated %}
                         <li class="nav-item">
@@ -56,7 +58,7 @@
     </h2>
 {% else %}
     <h2 class="text-center mb-4">
-        Welcome, Guest!
+        Welcome, Bookie!
     </h2>
 {% endif %}
 
