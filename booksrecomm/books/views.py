@@ -13,7 +13,7 @@ class BookListView(ListView):
     model = Book
     template_name = "book_list.html"
     context_object_name = "books"
-    paginate_by = 10  # Number of books per page
+    paginate_by = 9  # Number of books per page
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -27,7 +27,7 @@ class AllBookListView(ListView):
     model = Book
     template_name = "books/book_list.html"
     context_object_name = "books"
-    paginate_by = 10  # Number of books per page
+    paginate_by = 9 # Number of books per page
 
     def get_queryset(self):
         return Book.objects.all()  # Show all books regardless of user
